@@ -27,4 +27,5 @@ Python | Pandas | Plotly | Streamlit
 Nassau Candy Distributor Dataset  
 
 ## 👨‍💻 Author
-Ashish
+Ashish Kushwah
+
