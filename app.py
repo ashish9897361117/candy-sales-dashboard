@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import time
 
 
 st.caption("Created by Ashish | Data Analyst Project")
@@ -12,7 +13,11 @@ st.set_page_config(page_title="Sales Dashboard", layout="wide")
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-df = pd.read_csv(r"Nassau Candy Distributor.csv")
+with st.spinner("📊 Loading dashboard data..."):
+    time.sleep(3)   # 👈 test delay
+    df = pd.read_csv(r"Nassau Candy Distributor.csv")
+
+st.success("Loaded!")
 
 # Create Profit Margin
 df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
