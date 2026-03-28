@@ -22,7 +22,7 @@ st.set_page_config(page_title="Sales Dashboard", layout="wide")
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-load_data()
+def load_data()
 return pd.read_csv(r"Nassau Candy Distributor.csv")
 
 with st.spinner("Loading dashboard..."):
