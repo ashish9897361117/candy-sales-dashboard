@@ -15,7 +15,8 @@ st.info("""
 • Profit contribution is concentrated among top-performing products.
 • Division-wise performance shows uneven profitability distribution.
 """)
-
+with st.spinner("Loading dashboard..."):
+    df = load_data()
 
 st.set_page_config(page_title="Sales Dashboard", layout="wide")
 
