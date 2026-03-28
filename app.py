@@ -22,8 +22,14 @@ st.set_page_config(page_title="Sales Dashboard", layout="wide")
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-def load_data()
-return pd.read_csv(r"Nassau Candy Distributor.csv")
+@st.cache_data
+def load_data(file_path):
+    """
+    Load dataset and create required columns
+    """
+    df = pd.read_csv(file_path)
+
+    return df
 
 with st.spinner("Loading dashboard..."):
     df = load_data();
