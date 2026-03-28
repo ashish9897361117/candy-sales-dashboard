@@ -16,7 +16,7 @@ st.title("📊 Nassau Candy Sales Dashboard")
 def load_data():
     return pd.read_csv("Nassau Candy Distributor.csv")
 
-df = load_data()")
+df = load_data()"
 
 # Create Profit Margin
 df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
