@@ -15,17 +15,18 @@ st.info("""
 • Profit contribution is concentrated among top-performing products.
 • Division-wise performance shows uneven profitability distribution.
 """)
-with st.spinner("Loading dashboard..."):
-    df = load_data()
+
 
 st.set_page_config(page_title="Sales Dashboard", layout="wide")
 
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-df = pd.read_csv(r"Nassau Candy Distributor.csv")
+load_data()
+return pd.read_csv(r"Nassau Candy Distributor.csv")
 
-
+with st.spinner("Loading dashboard..."):
+    df = load_data()
 # Create Profit Margin
 df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
 
