@@ -12,7 +12,7 @@ st.set_page_config(page_title="Sales Dashboard", layout="wide")
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-pd.read_csv("Nassau Candy Distributor.csv")
+pd.read_csv(r"Nassau Candy Distributor.csv")
 
 
 # Create Profit Margin
