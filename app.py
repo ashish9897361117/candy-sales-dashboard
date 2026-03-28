@@ -324,7 +324,7 @@ margin risks, and profit concentration patterns to support data-driven business 
 **Python • Pandas • Plotly • Streamlit**
 
 ### 👨‍💻 Developed By
-**Ashish**  
+**Ashish Kushwah**  
 Data Analytics & Business Intelligence Enthusiast
 
 ---
