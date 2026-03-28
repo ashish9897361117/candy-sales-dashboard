@@ -12,7 +12,11 @@ st.set_page_config(page_title="Sales Dashboard", layout="wide")
 st.title("📊 Nassau Candy Sales Dashboard")
 
 # Load Data
-df = pd.read_csv(r"C:\Users\Ashish Kushwah\OneDrive\Nassau_Project\Data\Nassau Candy Distributor.csv")
+@st.cache_data
+def load_data():
+    return pd.read_csv("Nassau Candy Distributor.csv")
+
+df = load_data()")
 
 # Create Profit Margin
 df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
