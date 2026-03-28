@@ -26,7 +26,7 @@ def load_data()
 return pd.read_csv(r"Nassau Candy Distributor.csv")
 
 with st.spinner("Loading dashboard..."):
-    df = load_data()
+    df = load_data();
 # Create Profit Margin
 df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
 
