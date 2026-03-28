@@ -27,7 +27,7 @@ def load_data(file_path):
     """
     Load dataset and create required columns
     """
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(r"Nassau Candy Distributor.csv)
 
     return df
 
