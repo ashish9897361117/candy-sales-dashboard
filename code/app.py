@@ -33,7 +33,7 @@ import pandas as pd
 
 with st.spinner("📊 Loading dashboard data..."):
     time.sleep(3)   # 👈 test delay
-    df = pd.read_csv(r"Nassau Candy Distributor.csv")
+    df = pd.read_csv(r"Data/Nassau Candy Distributor.csv")
 
 st.success("Loaded!")
 
