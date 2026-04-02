@@ -102,13 +102,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 # ---------------- MODULE 1 ----------------
-with tab1:
-    st.subheader("🏆 Product Margin Leaderboard")
-    # charts
-
-# ---------------- MODULE 2 ----------------
-with tab2:
-    st.subheader("Division Analysis")
 
 with tab1:
 
