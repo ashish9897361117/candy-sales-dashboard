@@ -110,7 +110,7 @@ total_sales = filtered_df["Sales"].sum()
 total_profit = filtered_df["Gross Profit"].sum()
 avg_margin = filtered_df["Profit Margin"].mean()
 gross_margin = total_profit / total_sales if total_sales != 0 else 0
-Profit Margin = filtered_df["Sales"].std()
+Profit_Margin = filtered_df["Sales"].std()
 
 
 col1, col2, col3, col4, col5 = st.columns(5)
@@ -119,7 +119,7 @@ col1.metric("💰 Total Sales", f"${total_sales:,.0f}")
 col2.metric("📈 Total Profit", f"${total_profit:,.0f}")
 col3.metric("📊 Avg Margin", f"{avg_margin:.2%}")
 col4.metric("🔥 Gross Margin", f"{gross_margin:.2%}")
-col5.metric("📉 Margin Volatility", f"{margin_volatility:.2%}")
+col5.metric("📉 Margin Volatility", f"{Profit_Margin:.2%}")
 
 
 
