@@ -1,7 +1,30 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+st.markdown("""
+<style>
+.kpi-card {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+.kpi-card:hover {
+    transform: scale(1.05);
+}
+.kpi-title {
+    font-size: 16px;
+    opacity: 0.8;
+}
+.kpi-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.title("🍬 Nassau Candy Sales Performance Dashboard")
 st.caption("Interactive Business Intelligence & Profitability Analysis")
