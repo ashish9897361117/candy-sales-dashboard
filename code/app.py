@@ -46,24 +46,17 @@ st.dataframe(df.head())
 
 
 #KPI Cards
-
-
 total_sales = df["Sales"].sum()
 total_profit = df["Gross Profit"].sum()
 avg_margin = df["Profit Margin"].mean()
+gross_margin = total_profit / total_sales
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("Total Sales", f"${total_sales:,.0f}")
 col2.metric("Total Profit", f"${total_profit:,.0f}")
-col3.metric("Avg Profit Margin", f"{avg_margin:.2%}")
-
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Product Profitability",
-    "🏢 Division Performance",
-    "⚙️ Cost vs Margin",
-    "💰 Profit Concentration"
-])
+col3.metric("Avg Margin", f"{avg_margin:.2%}")
+col4.metric("Gross Margin", f"{gross_margin:.2%}")
 
 
 st.markdown("## 📌 Key Business Insights")
