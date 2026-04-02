@@ -2,138 +2,178 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+# ================= PAGE CONFIG =================
+st.set_page_config(
+    page_title="Candy Sales Analytics Dashboard",
+    page_icon="🍬",
+    layout="wide"
+)
 
-st.title("🍬 Nassau Candy Sales Performance Dashboard")
-st.caption("Interactive Business Intelligence & Profitability Analysis")
+# ================= CUSTOM CSS =================
+st.markdown("""
+<style>
+.main-header {
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    padding: 25px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+}
+.sub-text {
+    font-size: 18px;
+    margin-top: 8px;
+}
+.module-box {
+    background-color: #f7f9fc;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+</style>
+""", unsafe_allow_html=True)
 
+# ================= HEADER =================
+st.markdown("""
+<div class="main-header">
+    <h1>🍬 Nassau Candy Sales Performance Dashboard</h1>
+    <p class="sub-text">
+        Advanced Business Analytics using Streamlit | Profitability • Cost Analysis • Performance Intelligence
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
-st.set_page_config(page_title="Sales Dashboard", layout="wide")
+st.write("")
 
+colh1, colh2, colh3, colh4 = st.columns(4)
 
+with colh1:
+    st.markdown("""
+    <div class="module-box">
+        <h4>📈 Product Profitability</h4>
+        <p>Margin leaderboard & profit contribution analysis</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown("## 📌 Executive Insights")
+with colh2:
+    st.markdown("""
+    <div class="module-box">
+        <h4>🏢 Division Performance</h4>
+        <p>Revenue vs Profit comparison & margin distribution</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.info("""
-✅ Top products generate majority of total profit.
+with colh3:
+    st.markdown("""
+    <div class="module-box">
+        <h4>⚙️ Cost Diagnostics</h4>
+        <p>Cost vs Sales insights & margin risk detection</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-✅ Some high-sales products have low profit margins,
-indicating pricing or cost inefficiencies.
+with colh4:
+    st.markdown("""
+    <div class="module-box">
+        <h4>💰 Profit Concentration</h4>
+        <p>Pareto analysis & dependency indicators</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-✅ Division performance shows uneven profitability distribution.
+st.divider()
 
-✅ Business profit depends heavily on a few key products (Pareto effect).
-    
-""")
+# ================= DARK MODE TOGGLE =================
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
 
+toggle = st.toggle("🌙 Dark Mode", value=st.session_state.dark_mode)
+st.session_state.dark_mode = toggle
 
-# Load Data
-import time
-import streamlit as st
-import pandas as pd
+if st.session_state.dark_mode:
+    st.markdown("""
+    <style>
+        .stApp {
+            background-color: #0E1117;
+            color: white;
+        }
+        .module-box {
+            background-color: #1E1E1E !important;
+            color: white;
+        }
+        h1,h2,h3,h4,h5,h6,p,div,span,label {
+            color: white !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <style>
+        .stApp {
+            background-color: white;
+            color: black;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
+# ================= DATA LOADING =================
 with st.spinner("📊 Loading dashboard data..."):
-    time.sleep(3)   # 👈 test delay
-    df = pd.read_csv(r"Data/Nassau Candy Distributor.csv")
+    df = pd.read_csv("Nassau Candy Distributor.csv")
+    df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
 
-st.success("Loaded!")
+# ================= SIDEBAR FILTERS =================
+st.sidebar.title("🍬 Candy Analytics")
+st.sidebar.caption("Interactive Business Intelligence")
+st.sidebar.markdown("---")
 
-total_sales = df["Sales"].sum()
-total_profit = df["Gross Profit"].sum()
-avg_margin = df["Profit Margin"].mean()
-gross_margin = total_profit / total_sales
+division_options = sorted(df["Division"].dropna().unique())
+selected_divisions = st.sidebar.multiselect(
+    "🏢 Select Division",
+    division_options,
+    default=division_options
+)
 
+filtered_df = df[df["Division"].isin(selected_divisions)].copy()
 
-col1, col2, col3, col4 = st.columns(4)
+st.sidebar.markdown("---")
+st.sidebar.caption(f"Showing {len(filtered_df):,} rows")
 
-with col1:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">💰 Total Sales</div>
-        <div class="kpi-value">${total_sales:,.0f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">📈 Total Profit</div>
-        <div class="kpi-value">${total_profit:,.0f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">📊 Avg Margin</div>
-        <div class="kpi-value">{avg_margin:.2%}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">🔥 Gross Margin</div>
-        <div class="kpi-value">{gross_margin:.2%}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-
-# Create Profit Margin
-df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
-
-st.dataframe(df.head())
-
-
-#KPI Cards
-total_sales = df["Sales"].sum()
-total_profit = df["Gross Profit"].sum()
-avg_margin = df["Profit Margin"].mean()
-gross_margin = total_profit / total_sales
+# ================= KPI SECTION =================
+total_sales = filtered_df["Sales"].sum()
+total_profit = filtered_df["Gross Profit"].sum()
+avg_margin = filtered_df["Profit Margin"].mean()
+gross_margin = total_profit / total_sales if total_sales != 0 else 0
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Total Sales", f"${total_sales:,.0f}")
-col2.metric("Total Profit", f"${total_profit:,.0f}")
-col3.metric("Avg Margin", f"{avg_margin:.2%}")
-col4.metric("Gross Margin", f"{gross_margin:.2%}")
+col1.metric("💰 Total Sales", f"${total_sales:,.0f}")
+col2.metric("📈 Total Profit", f"${total_profit:,.0f}")
+col3.metric("📊 Avg Margin", f"{avg_margin:.2%}")
+col4.metric("🔥 Gross Margin", f"{gross_margin:.2%}")
 
-
+# ================= KEY BUSINESS INSIGHTS =================
 st.markdown("## 📌 Key Business Insights")
 
-st.markdown("""
-### 1️⃣ Revenue Growth Trend
-Business revenue shows noticeable variation across different time periods,
-indicating seasonal demand patterns and peak sales opportunities.
+st.info("""
+🔎 **Profit Concentration:**  
+A small group of products contributes a significant share of total profit, indicating a Pareto-like distribution.
 
-### 2️⃣ Top Performing Products
-A small group of products contributes the majority of total revenue and profit.
-Focusing marketing and inventory on these products can maximize returns.
+📊 **Margin Imbalance:**  
+Some products generate high sales revenue but operate with relatively low profit margins, suggesting pricing or cost optimization opportunities.
 
-### 3️⃣ Profitability Analysis
-High sales volume does not always mean high profit. Some products generate
-lower margins, suggesting pricing or cost optimization opportunities.
+🏢 **Division Performance Variation:**  
+Profitability differs across divisions, highlighting uneven operational efficiency and potential areas for performance improvement.
 
-### 4️⃣ Customer Purchase Behavior
-Customers show repeat buying patterns in certain categories, indicating
-strong preferences and potential for loyalty programs.
+⚠️ **Margin Risk Areas:**  
+Low-margin products may expose the business to profitability risks if costs increase or pricing pressure occurs.
 
-### 5️⃣ Regional / Segment Performance
-Sales performance varies across regions and customer segments, highlighting
-areas for targeted marketing strategies.
-
-### 6️⃣ Margin Volatility
-Profit margins fluctuate due to discounts, operational costs, and product mix.
-Regular monitoring helps maintain stable profitability.
-
-### 7️⃣ Business Optimization Opportunity
-Shifting focus toward high-margin products and reducing low-profit dependency
-can improve overall business efficiency.
+📈 **Growth Opportunity:**  
+Focusing on high-margin and consistently profitable products can improve overall business profitability and resource allocation.
 """)
 
+# ================= RISK ALERTS =================
+low_margin_products = filtered_df[filtered_df["Profit Margin"] < 0.10]
+st.error(f"⚠️ {len(low_margin_products)} products/orders fall into the low-margin risk zone.")
 
-#MODULE 1 — Product Profitability Overview
-# ---------------- TABS ----------------
+# ================= TABS =================
 tab1, tab2, tab3, tab4 = st.tabs([
     "📊 Product Profitability",
     "🏢 Division Performance",
@@ -141,208 +181,126 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "💰 Profit Concentration"
 ])
 
-# ---------------- MODULE 1 ----------------
-
+# ================= MODULE 1 — PRODUCT PROFITABILITY =================
 with tab1:
-
     st.subheader("🏆 Product Margin Leaderboard")
 
     leaderboard = (
-        df.groupby("Product Name")[["Sales","Gross Profit","Profit Margin"]]
+        filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
         .mean()
         .sort_values("Profit Margin", ascending=False)
         .reset_index()
     )
 
-    st.dataframe(leaderboard.head(10))
+    st.dataframe(leaderboard.head(10), use_container_width=True)
 
-import plotly.express as px
+    st.subheader("💵 Top Profit Contributing Products")
 
-profit_contribution = (
-    df.groupby("Product Name")["Gross Profit"]
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-    .reset_index()
-)
+    profit_contribution = (
+        filtered_df.groupby("Product Name")["Gross Profit"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+        .reset_index()
+    )
 
-fig = px.bar(
-    profit_contribution,
-    x="Product Name",
-    y="Gross Profit",
-    title="Top Profit Contributing Products"
-)
+    fig1 = px.bar(
+        profit_contribution,
+        x="Product Name",
+        y="Gross Profit",
+        title="Top Profit Contributing Products"
+    )
+    st.plotly_chart(fig1, use_container_width=True)
 
-st.plotly_chart(fig, use_container_width=True, key ="charts1")
-
-#MODULE 2 — Division Performance Dashboard
+# ================= MODULE 2 — DIVISION PERFORMANCE =================
 with tab2:
-
-    st.subheader("Revenue vs Profit by Division")
+    st.subheader("🏢 Revenue vs Profit by Division")
 
     division_perf = (
-        df.groupby("Division")[["Sales","Gross Profit"]]
+        filtered_df.groupby("Division")[["Sales", "Gross Profit"]]
         .sum()
         .reset_index()
     )
 
-    fig = px.bar(
+    fig2 = px.bar(
         division_perf,
         x="Division",
-        y=["Sales","Gross Profit"],
-        barmode="group"
+        y=["Sales", "Gross Profit"],
+        barmode="group",
+        title="Revenue vs Profit Comparison by Division"
     )
+    st.plotly_chart(fig2, use_container_width=True)
 
-    st.plotly_chart(fig, use_container_width=True, key ="charts2" )
+    st.subheader("📦 Margin Distribution by Division")
 
-#Margin Distribution
-fig2 = px.box(
-    df,
-    x="Division",
-    y="Profit Margin",
-    title="Margin Distribution by Division"
-)
+    fig3 = px.box(
+        filtered_df,
+        x="Division",
+        y="Profit Margin",
+        title="Margin Distribution by Division"
+    )
+    st.plotly_chart(fig3, use_container_width=True)
 
-st.plotly_chart(fig2, use_container_width=True , key ="charts3")
-
-#MODULE 3 — Cost vs Margin Diagnostics
-
+# ================= MODULE 3 — COST VS MARGIN =================
 with tab3:
+    st.subheader("⚙️ Cost vs Sales Scatter Plot")
 
-    st.subheader("Cost vs Sales Diagnostics")
-
-    fig3 = px.scatter(
-        df,
-        x="Sales",
-        y="Gross Profit",
+    fig4 = px.scatter(
+        filtered_df,
+        x="Cost",
+        y="Sales",
         color="Division",
-        hover_data=["Product Name"]
+        hover_data=["Product Name"],
+        title="Cost vs Sales Diagnostics"
+    )
+    st.plotly_chart(fig4, use_container_width=True)
+
+    st.subheader("⚠️ Low Margin Risk Products")
+
+    risk_table = (
+        filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
+        .mean()
+        .sort_values("Profit Margin", ascending=True)
+        .reset_index()
     )
 
-    st.plotly_chart(fig3, use_container_width=True, key ="charts4")
-#Margin risk Flags
+    st.dataframe(risk_table.head(10), use_container_width=True)
 
-risk_products = df[df["Profit Margin"] < 0.1]
-
-st.warning("⚠️ Low Margin Risk Products")
-st.dataframe(risk_products[["Product Name","Profit Margin"]])
-
-
-#MODULE 4 — Profit Concentration Analysis
-
+# ================= MODULE 4 — PROFIT CONCENTRATION =================
 with tab4:
+    st.subheader("💰 Pareto Analysis")
 
     pareto = (
-        df.groupby("Product Name")["Gross Profit"]
+        filtered_df.groupby("Product Name")["Gross Profit"]
         .sum()
         .sort_values(ascending=False)
         .reset_index()
     )
 
-pareto["Cumulative Profit %"] = (
-    pareto["Gross Profit"].cumsum()
-    / pareto["Gross Profit"].sum()
-)
-with tab4:
+    pareto["Cumulative Profit %"] = pareto["Gross Profit"].cumsum() / pareto["Gross Profit"].sum()
 
-    pareto = (
-        df.groupby("Product Name")["Gross Profit"]
-        .sum()
-        .sort_values(ascending=False)
-        .reset_index()
+    fig5 = px.line(
+        pareto.head(20),
+        x="Product Name",
+        y="Cumulative Profit %",
+        title="Profit Concentration (Pareto Analysis)"
     )
+    st.plotly_chart(fig5, use_container_width=True)
 
-pareto["Cumulative Profit %"] = (
-    pareto["Gross Profit"].cumsum()
-    / pareto["Gross Profit"].sum()
-)
+    top3_share = pareto.head(3)["Gross Profit"].sum() / pareto["Gross Profit"].sum()
+    st.metric("🎯 Top 3 Products Profit Dependency", f"{top3_share:.2%}")
 
-
+# ================= RECOMMENDATIONS =================
 st.markdown("## 🎯 Business Recommendations")
 
 st.success("""
-• Optimize pricing for low-margin products
-• Focus on top profit contributors
-• Reduce cost-heavy inventory
+• Optimize pricing strategy for low-margin, high-sales products.  
+• Focus promotions and inventory planning on top profit-contributing products.  
+• Monitor divisions with unstable margins for operational improvement.  
+• Reduce dependence on a few products by strengthening mid-performing items.  
 """)
 
-
-
-#Sidebar Filters
-
-st.sidebar.header("Filters")
-
-division = st.sidebar.multiselect(
-    "Select Division",
-    df["Division"].unique(),
-    default=df["Division"].unique()
-)
-
-filtered_df = df[df["Division"].isin(division)]
-
-
-#Best Division Charts 
-
-division_profit = filtered_df.groupby("Division")["Gross Profit"].sum().reset_index()
-
-fig1 = px.bar(
-    division_profit,
-    x="Division",
-    y="Gross Profit",
-    title="Profit by Division"
-)
-
-st.plotly_chart(fig1, use_container_width=True, key ="charts5")
-
-#High Sales vs Low Profit (Scatter Plot)
-
-fig2 = px.scatter(
-    filtered_df,
-    x="Sales",
-    y="Gross Profit",
-    color="Division",
-    hover_data=["Product Name"],
-    title="Sales vs Profit Analysis"
-)
-
-st.plotly_chart(fig2, use_container_width=True, key ="charts6")
-
-
-#Worst Margin Products Table
-
-worst_products = (
-    filtered_df.groupby("Product Name")["Profit Margin"]
-    .mean()
-    .sort_values()
-    .head(10)
-)
-
-st.subheader("⚠️ Lowest Margin Products")
-st.dataframe(worst_products)
-
-
-#Profit Dependency Charts
-
-top_products = (
-    filtered_df.groupby("Product Name")["Gross Profit"]
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-    .reset_index()
-)
-
-fig3 = px.bar(
-    top_products,
-    x="Product Name",
-    y="Gross Profit",
-    title="Top Profit Contributing Products"
-)
-
-st.plotly_chart(fig3, use_container_width=True, key ="charts7")
-
-
-#About Section
-
+# ================= ABOUT SECTION =================
 st.markdown("---")
 
 st.markdown("""
@@ -367,10 +325,11 @@ margin risks, and profit concentration patterns to support data-driven business 
 **Python • Pandas • Plotly • Streamlit**
 
 ### 👨‍💻 Developed By
-**Ashish Kushwah**  
+**Ashish**  
 Data Analytics & Business Intelligence Enthusiast
 
 ---
 *Built as an end-to-end data analytics project — from data cleaning and analysis to dashboard design and cloud deployment.*
 """)
 
+st.caption("© 2026 Ashish | Data Analytics Portfolio Project")
