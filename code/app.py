@@ -1,30 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-st.markdown("""
-<style>
-.kpi-card {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    padding: 20px;
-    border-radius: 15px;
-    color: white;
-    text-align: center;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
-.kpi-card:hover {
-    transform: scale(1.05);
-}
-.kpi-title {
-    font-size: 16px;
-    opacity: 0.8;
-}
-.kpi-value {
-    font-size: 28px;
-    font-weight: bold;
-}
-</style>
-""", unsafe_allow_html=True)
+
 
 st.title("🍬 Nassau Candy Sales Performance Dashboard")
 st.caption("Interactive Business Intelligence & Profitability Analysis")
@@ -59,6 +36,41 @@ with st.spinner("📊 Loading dashboard data..."):
     df = pd.read_csv(r"Data/Nassau Candy Distributor.csv")
 
 st.success("Loaded!")
+
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">💰 Total Sales</div>
+        <div class="kpi-value">${total_sales:,.0f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">📈 Total Profit</div>
+        <div class="kpi-value">${total_profit:,.0f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">📊 Avg Margin</div>
+        <div class="kpi-value">{avg_margin:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">🔥 Gross Margin</div>
+        <div class="kpi-value">{gross_margin:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 
