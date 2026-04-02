@@ -107,10 +107,10 @@ st.sidebar.caption(f"Showing {len(filtered_df):,} rows")
 
 # ================= KPI SECTION =================
 total_sales = filtered_df["Sales"].sum()
-Profit Margin = filtered_df["Sales"].std()
 total_profit = filtered_df["Gross Profit"].sum()
 avg_margin = filtered_df["Profit Margin"].mean()
 gross_margin = total_profit / total_sales if total_sales != 0 else 0
+Profit Margin = filtered_df["Sales"].std()
 
 
 col1, col2, col3, col4, col5 = st.columns(5)
