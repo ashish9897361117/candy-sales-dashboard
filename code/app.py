@@ -24,7 +24,7 @@ st.markdown("""
     margin-top: 8px;
 }
 .module-box {
-    background-color: #f7f9fc;
+    background-color: #black;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
