@@ -116,7 +116,7 @@ else:
 
 # ================= DATA LOADING =================
 with st.spinner("📊 Loading dashboard data..."):
-    df = pd.read_csv("Nassau Candy Distributor.csv")
+    df = pd.read_csv("data/Nassau Candy Distributor.csv")
     df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
 
 # ================= SIDEBAR FILTERS =================
