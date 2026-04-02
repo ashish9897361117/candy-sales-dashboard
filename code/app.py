@@ -37,6 +37,11 @@ with st.spinner("📊 Loading dashboard data..."):
 
 st.success("Loaded!")
 
+total_sales = df["Sales"].sum()
+total_profit = df["Gross Profit"].sum()
+avg_margin = df["Profit Margin"].mean()
+gross_margin = total_profit / total_sales
+
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -44,7 +49,7 @@ with col1:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">💰 Total Sales</div>
-        <div class="kpi-value">${Total_sales:,.0f}</div>
+        <div class="kpi-value">${total_sales:,.0f}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -52,7 +57,7 @@ with col2:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">📈 Total Profit</div>
-        <div class="kpi-value">${Total_profit:,.0f}</div>
+        <div class="kpi-value">${total_profit:,.0f}</div>
     </div>
     """, unsafe_allow_html=True)
 
