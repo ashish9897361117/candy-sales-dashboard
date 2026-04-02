@@ -44,7 +44,7 @@ with col1:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">💰 Total Sales</div>
-        <div class="kpi-value">${total_sales:,.0f}</div>
+        <div class="kpi-value">${Total_sales:,.0f}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -52,7 +52,7 @@ with col2:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">📈 Total Profit</div>
-        <div class="kpi-value">${total_profit:,.0f}</div>
+        <div class="kpi-value">${Total_profit:,.0f}</div>
     </div>
     """, unsafe_allow_html=True)
 
