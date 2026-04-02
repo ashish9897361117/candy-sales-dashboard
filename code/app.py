@@ -81,38 +81,7 @@ with colh4:
 
 st.divider()
 
-# ================= DARK MODE TOGGLE =================
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
 
-toggle = st.toggle("🌙 Dark Mode", value=st.session_state.dark_mode)
-st.session_state.dark_mode = toggle
-
-if st.session_state.dark_mode:
-    st.markdown("""
-    <style>
-        .stApp {
-            background-color: #0E1117;
-            color: white;
-        }
-        .module-box {
-            background-color: #1E1E1E !important;
-            color: white;
-        }
-        h1,h2,h3,h4,h5,h6,p,div,span,label {
-            color: white !important;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <style>
-        .stApp {
-            background-color: white;
-            color: black;
-        }
-    </style>
-    """, unsafe_allow_html=True)
 
 # ================= DATA LOADING =================
 with st.spinner("📊 Loading dashboard data..."):
