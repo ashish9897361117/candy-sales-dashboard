@@ -115,7 +115,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("💰 Total Sales", f"${total_sales:,.0f}")
 col2.metric("📈 Total Profit", f"${total_profit:,.0f}")
-col3.metric("📊 Avg Margin", f"{avg_margin:.0%}")
+col3.metric("📊 Avg Margin", f"{avg_margin:.2%}")
 col4.metric("🔥 Gross Margin", f"{gross_margin:.2%}")
 
 # ================= KEY BUSINESS INSIGHTS =================
