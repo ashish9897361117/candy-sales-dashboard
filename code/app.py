@@ -89,10 +89,34 @@ with st.spinner("📊 Loading dashboard data..."):
     df["Profit Margin"] = df["Gross Profit"] / df["Sales"]
 
 # ================= SIDEBAR FILTERS =================
+# ================= SIDEBAR FILTERS =================
 st.sidebar.title("🍬 Candy Analytics")
 st.sidebar.caption("Interactive Business Intelligence")
 st.sidebar.markdown("---")
 
+# Convert date column
+df["Order Date"] = pd.to_datetime(df["Order Date"], errors="coerce")
+
+# ---------------- DATE RANGE SELECTOR ----------------
+min_date = df["Order Date"].min()
+max_date = df["Order Date"].max()
+
+date_range = st.sidebar.date_input(
+    "📅 Select Order Date Range",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date
+)
+
+# Apply date filter
+if len(date_range) == 2:
+    start_date, end_date = date_range
+    df = df[
+        (df["Order Date"] >= pd.to_datetime(start_date)) &
+        (df["Order Date"] <= pd.to_datetime(end_date))
+    ]
+
+# ---------------- DIVISION FILTER ----------------
 division_options = sorted(df["Division"].dropna().unique())
 selected_divisions = st.sidebar.multiselect(
     "🏢 Select Division",
@@ -100,10 +124,36 @@ selected_divisions = st.sidebar.multiselect(
     default=division_options
 )
 
+# ---------------- PRODUCT SEARCH ----------------
+product_search = st.sidebar.text_input(
+    "🔍 Search Product",
+    placeholder="Type product name..."
+)
+
+# ---------------- MARGIN THRESHOLD SLIDER ----------------
+margin_threshold = st.sidebar.slider(
+    "📊 Minimum Profit Margin",
+    min_value=0.0,
+    max_value=float(df["Profit Margin"].max()) if not df["Profit Margin"].isna().all() else 1.0,
+    value=0.0,
+    step=0.01
+)
+
+# ---------------- APPLY ALL FILTERS ----------------
 filtered_df = df[df["Division"].isin(selected_divisions)].copy()
 
+if product_search:
+    filtered_df = filtered_df[
+        filtered_df["Product Name"].str.contains(product_search, case=False, na=False)
+    ]
+
+filtered_df = filtered_df[filtered_df["Profit Margin"] >= margin_threshold]
+
+# ---------------- SIDEBAR SUMMARY ----------------
 st.sidebar.markdown("---")
 st.sidebar.caption(f"Showing {len(filtered_df):,} rows")
+if len(date_range) == 2:
+    st.sidebar.caption(f"From {start_date} to {end_date}")
 
 # ================= KPI SECTION =================
 total_sales = filtered_df["Sales"].sum()
