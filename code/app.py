@@ -198,121 +198,110 @@ low_margin_products = filtered_df[filtered_df["Profit Margin"] < 0.10]
 st.error(f"⚠️ {len(low_margin_products)} products/orders fall into the low-margin risk zone.")
 
 # ================= TABS =================
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Product Profitability",
-    "🏢 Division Performance",
-    "⚙️ Cost vs Margin",
-    "💰 Profit Concentration"
-])
+# ================= DASHBOARD MODULES =================
+st.markdown("## 📚 Dashboard Modules")
 
-# ================= MODULE 1 — PRODUCT PROFITABILITY =================
-with tab1:
-    st.subheader("🏆 Product Margin Leaderboard")
+# ================= 1. PRODUCT PROFITABILITY OVERVIEW =================
+st.markdown("### • Product Profitability Overview")
 
-    leaderboard = (
-        filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
-        .mean()
-        .sort_values("Profit Margin", ascending=False)
-        .reset_index()
-    )
+st.markdown("#### ◦ Product-level margin leaderboard")
+leaderboard = (
+    filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
+    .mean()
+    .sort_values("Profit Margin", ascending=False)
+    .reset_index()
+)
+st.dataframe(leaderboard.head(10), use_container_width=True)
 
-    st.dataframe(leaderboard.head(10), use_container_width=True)
+st.markdown("#### ◦ Profit contribution charts")
+profit_contribution = (
+    filtered_df.groupby("Product Name")["Gross Profit"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+fig1 = px.bar(
+    profit_contribution,
+    x="Product Name",
+    y="Gross Profit",
+    title="Top Profit Contributing Products"
+)
+st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("💵 Top Profit Contributing Products")
+# ================= 2. DIVISION PERFORMANCE DASHBOARD =================
+st.markdown("### • Division Performance Dashboard")
 
-    profit_contribution = (
-        filtered_df.groupby("Product Name")["Gross Profit"]
-        .sum()
-        .sort_values(ascending=False)
-        .head(10)
-        .reset_index()
-    )
+st.markdown("#### ◦ Revenue vs profit comparison")
+division_perf = (
+    filtered_df.groupby("Division")[["Sales", "Gross Profit"]]
+    .sum()
+    .reset_index()
+)
+fig2 = px.bar(
+    division_perf,
+    x="Division",
+    y=["Sales", "Gross Profit"],
+    barmode="group",
+    title="Revenue vs Profit Comparison by Division"
+)
+st.plotly_chart(fig2, use_container_width=True)
 
-    fig1 = px.bar(
-        profit_contribution,
-        x="Product Name",
-        y="Gross Profit",
-        title="Top Profit Contributing Products"
-    )
-    st.plotly_chart(fig1, use_container_width=True)
+st.markdown("#### ◦ Margin distribution by division")
+fig3 = px.box(
+    filtered_df,
+    x="Division",
+    y="Profit Margin",
+    title="Margin Distribution by Division"
+)
+st.plotly_chart(fig3, use_container_width=True)
 
-# ================= MODULE 2 — DIVISION PERFORMANCE =================
-with tab2:
-    st.subheader("🏢 Revenue vs Profit by Division")
+# ================= 3. COST VS MARGIN DIAGNOSTICS =================
+st.markdown("### • Cost vs Margin Diagnostics")
 
-    division_perf = (
-        filtered_df.groupby("Division")[["Sales", "Gross Profit"]]
-        .sum()
-        .reset_index()
-    )
+st.markdown("#### ◦ Cost-sales scatter plots")
+fig4 = px.scatter(
+    filtered_df,
+    x="Cost",
+    y="Sales",
+    color="Division",
+    hover_data=["Product Name"],
+    title="Cost vs Sales Scatter Plot"
+)
+st.plotly_chart(fig4, use_container_width=True)
 
-    fig2 = px.bar(
-        division_perf,
-        x="Division",
-        y=["Sales", "Gross Profit"],
-        barmode="group",
-        title="Revenue vs Profit Comparison by Division"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
+st.markdown("#### ◦ Margin risk flags")
+risk_table = (
+    filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
+    .mean()
+    .sort_values("Profit Margin", ascending=True)
+    .reset_index()
+)
+st.dataframe(risk_table.head(10), use_container_width=True)
 
-    st.subheader("📦 Margin Distribution by Division")
+# ================= 4. PROFIT CONCENTRATION ANALYSIS =================
+st.markdown("### • Profit Concentration Analysis")
 
-    fig3 = px.box(
-        filtered_df,
-        x="Division",
-        y="Profit Margin",
-        title="Margin Distribution by Division"
-    )
-    st.plotly_chart(fig3, use_container_width=True)
+st.markdown("#### ◦ Pareto charts")
+pareto = (
+    filtered_df.groupby("Product Name")["Gross Profit"]
+    .sum()
+    .sort_values(ascending=False)
+    .reset_index()
+)
+pareto["Cumulative Profit %"] = pareto["Gross Profit"].cumsum() / pareto["Gross Profit"].sum()
 
-# ================= MODULE 3 — COST VS MARGIN =================
-with tab3:
-    st.subheader("⚙️ Cost vs Sales Scatter Plot")
+fig5 = px.line(
+    pareto.head(20),
+    x="Product Name",
+    y="Cumulative Profit %",
+    title="Profit Concentration (Pareto Analysis)"
+)
+st.plotly_chart(fig5, use_container_width=True)
 
-    fig4 = px.scatter(
-        filtered_df,
-        x="Cost",
-        y="Sales",
-        color="Division",
-        hover_data=["Product Name"],
-        title="Cost vs Sales Diagnostics"
-    )
-    st.plotly_chart(fig4, use_container_width=True)
-
-    st.subheader("⚠️ Low Margin Risk Products")
-
-    risk_table = (
-        filtered_df.groupby("Product Name")[["Sales", "Gross Profit", "Profit Margin"]]
-        .mean()
-        .sort_values("Profit Margin", ascending=True)
-        .reset_index()
-    )
-
-    st.dataframe(risk_table.head(10), use_container_width=True)
-
-# ================= MODULE 4 — PROFIT CONCENTRATION =================
-with tab4:
-    st.subheader("💰 Pareto Analysis")
-
-    pareto = (
-        filtered_df.groupby("Product Name")["Gross Profit"]
-        .sum()
-        .sort_values(ascending=False)
-        .reset_index()
-    )
-
-    pareto["Cumulative Profit %"] = pareto["Gross Profit"].cumsum() / pareto["Gross Profit"].sum()
-
-    fig5 = px.line(
-        pareto.head(20),
-        x="Product Name",
-        y="Cumulative Profit %",
-        title="Profit Concentration (Pareto Analysis)"
-    )
-    st.plotly_chart(fig5, use_container_width=True)
-
-    top3_share = pareto.head(3)["Gross Profit"].sum() / pareto["Gross Profit"].sum()
-    st.metric("🎯 Top 3 Products Profit Dependency", f"{top3_share:.2%}")
+st.markdown("#### ◦ Dependency indicators")
+top3_share = pareto.head(3)["Gross Profit"].sum() / pareto["Gross Profit"].sum()
+st.metric("🎯 Top 3 Products Profit Dependency", f"{top3_share:.2%}")
 
 # ================= RECOMMENDATIONS =================
 st.markdown("## 🎯 Business Recommendations")
